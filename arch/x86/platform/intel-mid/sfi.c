@@ -6,6 +6,8 @@
  * Author: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@intel.com>
  */
 
+#define DEBUG
+
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/interrupt.h>

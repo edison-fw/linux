@@ -6,6 +6,8 @@
  *  Copyright (C) 2001 Jun Nakajima <jun.nakajima@intel.com>
  */
 
+#define DEBUG
+
 #include <linux/init.h>
 #include <linux/acpi.h>
 #include <linux/acpi_pmtmr.h>
