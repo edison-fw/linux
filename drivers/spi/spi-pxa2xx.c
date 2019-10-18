@@ -1605,7 +1605,7 @@ pxa2xx_spi_init_pdata(struct platform_device *pdev)
 		return NULL;
 
 	ssp->type = type;
-	ssp->pdev = pdev;
+	ssp->dev = &pdev->dev;
 	ssp->port_id = pxa2xx_spi_get_port_id(adev);
 
 	pdata->is_slave = of_property_read_bool(pdev->dev.of_node, "spi-slave");
