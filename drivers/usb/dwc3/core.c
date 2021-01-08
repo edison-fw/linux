@@ -114,10 +114,24 @@ void dwc3_set_prtcap(struct dwc3 *dwc, u32 mode)
 	dwc->current_dr_role = mode;
 }
 
+static void dwc3_gctl_core_soft_reset(struct dwc3 *dwc)
+{
+	int reg;
+
+	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
+	reg |= (DWC3_GCTL_CORESOFTRESET);
+	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
+
+	reg = dwc3_readl(dwc->regs, DWC3_GCTL);
+	reg &= ~(DWC3_GCTL_CORESOFTRESET);
+	dwc3_writel(dwc->regs, DWC3_GCTL, reg);
+}
+
 static void __dwc3_set_mode(struct work_struct *work)
 {
 	struct dwc3 *dwc = work_to_dwc(work);
 	unsigned long flags;
+	int hw_mode;
 	int ret;
 	u32 reg;
 
@@ -155,6 +169,11 @@ static void __dwc3_set_mode(struct work_struct *work)
 	}
 
 	spin_lock_irqsave(&dwc->lock, flags);
+
+	/* Execute a GCTL Core Soft Reset when switch mode in DRD*/
+	hw_mode = DWC3_GHWPARAMS0_MODE(dwc->hwparams.hwparams0);
+	if (hw_mode == DWC3_GHWPARAMS0_MODE_DRD)
+		dwc3_gctl_core_soft_reset(dwc);
 
 	dwc3_set_prtcap(dwc, dwc->desired_dr_role);
 
